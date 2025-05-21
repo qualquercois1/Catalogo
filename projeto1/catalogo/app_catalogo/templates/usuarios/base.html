@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Meu Site{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'app_catalogo/style.css' %}">
+  
+  <script src="https://unpkg.com/swup@4"></script>
+
+    {% block extra_css %}
+    <!-- Aqui as páginas filhas podem adicionar CSS específicos -->
+    {% endblock %}
+
+</head>
+
+<body>
+
+  <div class="topnav">
+      <a href="{% url 'home' %}">Catalogo</a>
+      <a href="{% url 'cadastro' %}">Cadastro</a>
+      <a href="#">Login</a>
+      <a href="#">Sobre nós</a>
+  </div>
+
+  <div id="swup">
+      {% block content %}
+      {% endblock %}
+  </div>
+
+  <script>
+      const swup = new Swup();
+  </script>
+
+</body>
+</html>

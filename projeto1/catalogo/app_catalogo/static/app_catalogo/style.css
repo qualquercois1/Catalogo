@@ -1,0 +1,76 @@
+#swup {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    }
+    html.is-changing #swup,
+    html.is-leaving #swup {
+    opacity: 0;
+}
+
+:root {
+    --home-bg-color: #e2c7b0;
+    --home-bg2-color: #f5ece4;
+    --home-lt-color: #695c4f;
+    --home-ct-bg-color: #C6986D;
+    --home-ct-bg2-color: #dcc0a5;
+    --home-hover-color: #AD7844;
+    --home-comp: #92B4D4;
+    --home-comp-dark: #6a98c4;
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: radial-gradient(circle, var(--home-bg2-color) 0%, var(--home-bg-color) 100%);
+    background-repeat: no-repeat;
+    background-size: 200% 200%;
+    animation: moveGradient 5s ease infinite;
+    color: var(--home-lt-color);
+    height: 100vh;
+    margin: 0;
+}
+
+
+
+.topnav {
+  background-color: var(--home-ct-bg-color);
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: var(--home-bg2-color);
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: var(--home-lt-color);
+  color: var(--home-hover-color);
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: var(--home-comp);
+  color: white;
+}
+
+
+
+
+@keyframes moveGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

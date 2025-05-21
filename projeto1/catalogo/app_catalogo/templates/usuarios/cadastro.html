@@ -1,0 +1,34 @@
+{% extends "usuarios/base.html" %}
+{% load static %}
+
+{% block title %}Cadastro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app_catalogo/cadastro_style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Cadastro</h1>
+        <div class="container_cadastro">
+            <form action="" method="post">
+                <div class="input-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+
+                <button type="submit" class="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
