@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-g">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao Catálogo de Filmes</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 2em; }
+        .container { max-width: 800px; margin: auto; }
+        .nav-link { display: inline-block; margin: 10px; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .nav-link:hover { background-color: #0056b3; }
+        .footer { margin-top: 40px; font-size: 0.9em; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Bem-vindo ao seu Catálogo Pessoal!</h1>
+        <p>Este é o seu espaço para organizar e avaliar os filmes e séries que você já assistiu.</p>
+        <hr>
+
+        <h3>O que você gostaria de fazer?</h3>
+
+        {% if user.is_authenticated %}
+            <p>Olá, {{ user.username }}!</p>
+            <a href="{% url 'catalog:criar_item' %}" class="nav-link">Adicionar Novo Filme/Série</a> 
+            <a href="{% url 'admin:index' %}" class="nav-link">Acessar Painel Admin</a>
+            {% else %}
+            <p>Faça o login para gerenciar sua coleção.</p>
+            <a href="{% url 'admin:index' %}" class="nav-link">Fazer Login (via Admin)</a>
+            <a href="{% url 'catalog:register' %}" class="nav-link">Registrar</a>
+            
+        {% endif %}
+
+        <div class="footer">
+            <p>Atualmente temos <strong>{{ total_itens }}</strong> item(ns) em nosso catálogo geral.</p>
+        </div>
+    </div>
+</body>
+</html>

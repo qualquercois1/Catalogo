@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Novo Filme/Série</title>
+    <style>
+        body { font-family: sans-serif; padding: 2em; }
+        form { max-width: 500px; margin: auto; }
+        form p { display: flex; flex-direction: column; margin-bottom: 1em; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h2>Adicionar Novo Item ao Catálogo</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Salvar Item</button>
+        </form>
+        <p><a href="{% url 'home' %}">Cancelar e voltar para a Home</a></p>
+    </div>
+</body>
+</html>

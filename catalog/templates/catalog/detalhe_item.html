@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ item.nome }}</title>
+    <style>
+        body { font-family: sans-serif; padding: 2em; }
+        .container { max-width: 700px; margin: auto; }
+        .avaliacao-form { margin-top: 2em; padding: 1em; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ item.nome }} ({{ item.ano_lancamento }})</h1>
+        <p><strong>Diretor:</strong> {{ item.diretor.nome }}</p>
+        <p><strong>Sinopse:</strong> {{ item.sinopse|linebreaks }}</p>
+        <p><strong>Gêneros:</strong> 
+            {% for genero in item.generos.all %}
+                {{ genero.nome }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <hr>
+
+        <div class="avaliacao-form">
+            <h3>Sua Avaliação</h3>
+            {% if avaliacao_existente %}
+                <p>Sua nota atual para este item é: <strong>{{ avaliacao_existente.nota }}</strong></p>
+            {% else %}
+                <p>Você ainda não avaliou este item.</p>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <label for="nota">Dar ou alterar nota:</label>
+                <select name="nota" id="nota">
+                    {% for i in range_notas %}
+                        <option value="{{ i }}" {% if avaliacao_existente and avaliacao_existente.nota == i %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Salvar Avaliação</button>
+            </form>
+        </div>
+        
+        <p style="margin-top: 2em;"><a href="{% url 'home' %}">Voltar para a Home</a></p>
+    </div>
+</body>
+</html>

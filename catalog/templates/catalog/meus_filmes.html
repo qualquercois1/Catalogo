@@ -1,0 +1,16 @@
+<h1>Meus Filmes e Séries Assistidos</h1>
+
+{% if filmes %}
+    <ul>
+        {% for filme in filmes %}
+            <li>
+                <strong>{{ filme.nome }} ({{ filme.ano_lancamento }})</strong>
+                <p>Diretor: {{ filme.diretor.nome }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Você ainda não avaliou nenhum filme ou série.</p>
+{% endif %}
+
+<p><a href="/admin/">Gerenciar no Admin</a></p>
