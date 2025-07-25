@@ -2,14 +2,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login # <-- A LINHA QUE FALTAVA
-
+from django.db.models import Subquery, OuterRef
 from .models import Item, Avaliacao
 from .forms import CustomUserCreationForm, ItemForm
 
 
 @login_required 
 def listar_meus_filmes(request):
-    filmes_do_usuario = Item.objects.filter(proprietario=request.user).order_by('-id')
+    # 1. Vamos criar uma subconsulta.
+    # Para cada Item na consulta principal (OuterRef('pk')), esta subconsulta vai buscar
+    # a 'nota' da Avaliacao que pertence ao usuário logado (request.user).
+    minha_nota_subquery = Avaliacao.objects.filter(
+        item_id=OuterRef('pk'),
+        usuario=request.user
+    ).values('nota')[:1] # O [:1] garante que pegamos apenas uma nota, caso haja alguma inconsistência.
+
+    # 2. Agora, fazemos a consulta principal.
+    # Buscamos todos os itens do proprietário e usamos .annotate() para adicionar um novo
+    # "campo virtual" chamado 'minha_nota' a cada item, preenchido com o resultado da subconsulta.
+    filmes_do_usuario = Item.objects.filter(
+        proprietario=request.user
+    ).annotate(
+        minha_nota=Subquery(minha_nota_subquery)
+    ).order_by('-id')
     
     context = {
         'filmes': filmes_do_usuario

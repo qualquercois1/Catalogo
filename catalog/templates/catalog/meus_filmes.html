@@ -1,16 +1,34 @@
-<h1>Meus Filmes e Séries Assistidos</h1>
+{% extends 'catalog/base.html' %}
 
-{% if filmes %}
-    <ul>
-        {% for filme in filmes %}
-            <li>
-                <strong>{{ filme.nome }} ({{ filme.ano_lancamento }})</strong>
-                <p>Diretor: {{ filme.diretor.nome }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Você ainda não avaliou nenhum filme ou série.</p>
-{% endif %}
+{% block title %}Meus Itens Cadastrados{% endblock %}
 
-<p><a href="/admin/">Gerenciar no Admin</a></p>
+{% block content %}
+    <h1>Meus Itens Cadastrados</h1>
+
+    {% if filmes %}
+        <ul>
+            {% for filme in filmes %}
+                <li>
+                    <a href="{% url 'catalog:detalhe_item' filme.id %}">
+                        <strong>{{ filme.nome }} ({{ filme.ano_lancamento }})</strong>
+                    </a>
+                    
+                    {# 👇👇 LÓGICA ADICIONADA AQUI 👇👇 #}
+                    {# Verifica se o campo 'minha_nota' não está vazio #}
+                    {% if filme.minha_nota %}
+                        <span style="color: #007bff; font-weight: bold;">
+                            (Sua nota: {{ filme.minha_nota }})
+                        </span>
+                    {% else %}
+                        <span style="color: #888; font-style: italic;">
+                            (Não avaliado)
+                        </span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Você ainda não cadastrou nenhum item.</p>
+        <p><a href="{% url 'catalog:criar_item' %}">Clique aqui para adicionar seu primeiro item!</a></p>
+    {% endif %}
+{% endblock %}

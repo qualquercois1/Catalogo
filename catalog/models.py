@@ -4,13 +4,13 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Genero(models.Model):
-    nome = models.CharField(max_length=30, unique=True)
+    nome = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.nome
 
 class Ator(models.Model):
-    nome = models.CharField(max_length=60)
+    nome = models.CharField(max_length=150)
 
     def __str__(self):
         return self.nome

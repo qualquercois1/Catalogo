@@ -16,6 +16,9 @@ class CustomUserCreationForm(UserCreationForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        # Defina os campos do modelo 'Item' que o usuário poderá preencher.
-        # Excluímos campos que não fazem sentido para o usuário preencher no cadastro inicial.
         fields = ['nome', 'sinopse', 'ano_lancamento', 'duracao', 'diretor', 'atores', 'generos']
+
+        widgets = {
+            'atores': forms.CheckboxSelectMultiple,
+            'generos': forms.CheckboxSelectMultiple,
+        }
