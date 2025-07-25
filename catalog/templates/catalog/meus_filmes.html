@@ -6,27 +6,70 @@
     <h1>Meus Itens Cadastrados</h1>
 
     {% if filmes %}
-        <ul>
-            {% for filme in filmes %}
-                <li>
-                    <a href="{% url 'catalog:detalhe_item' filme.id %}">
-                        <strong>{{ filme.nome }} ({{ filme.ano_lancamento }})</strong>
-                    </a>
-                    
-                    {# 👇👇 LÓGICA ADICIONADA AQUI 👇👇 #}
-                    {# Verifica se o campo 'minha_nota' não está vazio #}
-                    {% if filme.minha_nota %}
-                        <span style="color: #007bff; font-weight: bold;">
-                            (Sua nota: {{ filme.minha_nota }})
-                        </span>
-                    {% else %}
-                        <span style="color: #888; font-style: italic;">
-                            (Não avaliado)
-                        </span>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+        <style>
+            /* Estilos básicos para deixar a tabela mais bonita */
+            .styled-table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                width: 100%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+            .styled-table th,
+            .styled-table td {
+                padding: 12px 15px;
+            }
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+            .styled-table tbody tr:hover {
+                background-color: #e0e0e0;
+            }
+            .no-rating {
+                color: #888;
+                font-style: italic;
+            }
+        </style>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Nome do Item</th>
+                    <th>Ano</th>
+                    <th>Sua Nota</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for filme in filmes %}
+                    <tr>
+                        <td><strong>{{ filme.nome }}</strong></td>
+                        <td>{{ filme.ano_lancamento }}</td>
+                        <td>
+                            {% if filme.minha_nota %}
+                                {{ filme.minha_nota }} / 10
+                            {% else %}
+                                <span class="no-rating">Não avaliado</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'catalog:detalhe_item' filme.id %}">Ver Detalhes / Avaliar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
         <p>Você ainda não cadastrou nenhum item.</p>
         <p><a href="{% url 'catalog:criar_item' %}">Clique aqui para adicionar seu primeiro item!</a></p>
