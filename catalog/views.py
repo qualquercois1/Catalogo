@@ -1,10 +1,11 @@
 # catalog/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login # <-- A LINHA QUE FALTAVA
+from django.contrib.auth import login 
 from django.db.models import Subquery, OuterRef
-from .models import Item, Avaliacao
-from .forms import CustomUserCreationForm, ItemForm
+from .models import Item, Avaliacao, Diretor, Ator
+from .forms import CustomUserCreationForm, ItemForm,  DiretorForm, AtorForm
+from django.contrib.auth.views import LoginView, LogoutView
 
 
 @login_required 
@@ -110,3 +111,27 @@ def detalhe_item_view(request, item_id):
         'range_notas': range(1, 11) # Gera uma sequência de 1 a 10 para o formulário
     }
     return render(request, 'catalog/detalhe_item.html', context)
+
+class CustomLoginView(LoginView):
+    template_name = 'catalog/login.html'
+    redirect_authenticated_user = True
+
+
+@login_required
+def criar_diretor_popup(request):
+    form = DiretorForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        # Este contexto será usado pelo JavaScript para fechar o pop-up e atualizar a página principal
+        return render(request, "catalog/popup_close.html", {'instance_pk': instance.pk, 'instance_name': str(instance)})
+    
+    return render(request, "catalog/popup_form.html", {'form': form, 'title': 'Adicionar Novo Diretor'})
+
+@login_required
+def criar_ator_popup(request):
+    form = AtorForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save()
+        return render(request, "catalog/popup_close.html", {'instance_pk': instance.pk, 'instance_name': str(instance)})
+
+    return render(request, "catalog/popup_form.html", {'form': form, 'title': 'Adicionar Novo Ator'})

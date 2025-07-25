@@ -1,36 +1,32 @@
 {% extends 'catalog/base.html' %}
 
-{% block title %}Crie sua Conta{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 
 <style>
     .form-container {
-        max-width: 500px; /* Um pouco mais estreito para formulários de login/registro */
+        max-width: 500px;
         margin: auto;
         padding: 2em;
         background-color: #f9f9f9;
         border-radius: 8px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
-
     .form-container h2 {
         text-align: center;
         margin-bottom: 1.5em;
         color: #333;
     }
-
     .form-group {
         margin-bottom: 1.5em;
     }
-
     .form-group label {
         display: block;
         margin-bottom: 8px;
         font-weight: bold;
         color: #555;
     }
-
     .form-group input {
         width: 100%;
         padding: 12px;
@@ -38,21 +34,16 @@
         border-radius: 4px;
         box-sizing: border-box;
     }
-
-    .form-help-text {
-        font-size: 0.85em;
-        color: #666;
-        margin-top: 8px;
-    }
-
-    .form-errors {
+    /* Estilo para erros globais do formulário (ex: "usuário ou senha inválidos") */
+    .non-field-errors {
         color: #d9534f;
-        font-size: 0.9em;
+        background-color: #f2dede;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+        padding: 10px;
         list-style-type: none;
-        padding: 0;
-        margin-top: 5px;
+        margin-bottom: 1em;
     }
-
     .form-actions {
         text-align: center;
         margin-top: 2em;
@@ -60,7 +51,7 @@
     .form-actions button {
         padding: 12px 25px;
         font-size: 1em;
-        background-color: #28a745; /* Cor verde para registro */
+        background-color: #007bff; /* Cor azul para login */
         color: white;
         border: none;
         border-radius: 5px;
@@ -68,10 +59,9 @@
         transition: background-color 0.3s;
     }
     .form-actions button:hover {
-        background-color: #218838;
+        background-color: #0056b3;
     }
-
-    .login-link {
+    .register-link {
         text-align: center;
         margin-top: 1.5em;
         font-size: 0.9em;
@@ -79,34 +69,35 @@
 </style>
 
 <div class="form-container">
-    <h2>Crie sua Conta</h2>
+    <h2>Entrar</h2>
     <form method="post">
         {% csrf_token %}
 
-        {% for field in form %}
-            <div class="form-group">
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.help_text %}
-                    <div class="form-help-text">{{ field.help_text|safe }}</div>
-                {% endif %}
-                {% if field.errors %}
-                    <ul class="form-errors">
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-        {% endfor %}
+        {% if form.non_field_errors %}
+            <ul class="non-field-errors">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Nome de usuário</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Senha</label>
+            {{ form.password }}
+        </div>
 
         <div class="form-actions">
-            <button type="submit">Registrar</button>
+            <button type="submit">Entrar</button>
         </div>
     </form>
 
-    <div class="login-link">
-        <p>Já tem uma conta? <a href="{% url 'admin:login' %}">Faça login</a>.</p>
+    <div class="register-link">
+        <p>Não tem uma conta? <a href="{% url 'catalog:register' %}">Crie uma agora</a>.</p>
     </div>
 </div>
 

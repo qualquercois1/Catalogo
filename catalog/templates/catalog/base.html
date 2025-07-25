@@ -13,6 +13,23 @@
         .navbar a:hover { background-color: #ddd; color: black; }
         .navbar-right { float: right; }
         .container { padding: 2em; }
+
+        .logout-button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 14px 16px;
+            margin: 0;
+            font-size: 1em; /* Garante que o tamanho da fonte seja o mesmo do menu */
+            font-family: inherit; /* Garante que a fonte seja a mesma */
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+        .logout-button:hover {
+            background-color: #ddd;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -24,12 +41,17 @@
             <a href="{% url 'catalog:listar_meus_filmes' %}">Meus Itens</a>
             <a href="{% url 'catalog:criar_item' %}">Adicionar Item</a>
             <div class="navbar-right">
-                <a href="{% url 'admin:logout' %}">Sair ({{ user.username }})</a>
+                <form action="{% url 'catalog:logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">
+                        Sair ({{ user.username }})
+                    </button>
+                </form>
             </div>
         {% else %}
             <div class="navbar-right">
                 <a href="{% url 'catalog:register' %}">Registrar</a>
-                <a href="{% url 'admin:login' %}">Login</a>
+                <a href="{% url 'catalog:login' %}">Login</a>
             </div>
         {% endif %}
     </nav>

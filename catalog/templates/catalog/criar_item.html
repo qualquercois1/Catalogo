@@ -1,24 +1,199 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Adicionar Novo Filme/Série</title>
-    <style>
-        body { font-family: sans-serif; padding: 2em; }
-        form { max-width: 500px; margin: auto; }
-        form p { display: flex; flex-direction: column; margin-bottom: 1em; }
-        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <div style="text-align: center;">
-        <h2>Adicionar Novo Item ao Catálogo</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+{% extends 'catalog/base.html' %}
+
+{% block title %}Adicionar Novo Item{% endblock %}
+
+{% block content %}
+
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 2em;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 1.5em;
+        color: #333;
+    }
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    .form-row {
+        display: flex;
+        gap: 20px;
+    }
+    .form-row .form-group {
+        width: 100%;
+    }
+
+    /* 👇👇 ESTE BLOCO DE CÓDIGO FOI REVISADO 👇👇 */
+    .checkbox-group {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 1em;
+        background-color: white;
+
+        /* 1. Aplicamos a altura máxima e a rolagem na caixa principal */
+        max-height: 150px; /* Você pode ajustar este valor */
+        overflow-y: auto;
+    }
+    .checkbox-group h4 {
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5em;
+    }
+    .checkbox-group ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        /* 2. O Flexbox agora organiza os itens dentro da caixa com altura definida */
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .checkbox-group li {
+        white-space: nowrap;
+    }
+
+    /* O resto dos estilos continuam iguais */
+    .form-actions {
+        text-align: center;
+        margin-top: 2em;
+    }
+    .form-actions button {
+        padding: 12px 25px;
+        font-size: 1em;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .form-actions button:hover {
+        background-color: #0056b3;
+    }
+    .add-another {
+        margin-left: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #007bff;
+    }
+    .add-another:hover {
+        color: #0056b3;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Adicionar Novo Item ao Catálogo</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.nome.label_tag }}
+            {{ form.nome }}
+        </div>
+
+        <div class="form-group">
+            {{ form.sinopse.label_tag }}
+            {{ form.sinopse }}
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.ano_lancamento.label_tag }}
+                {{ form.ano_lancamento }}
+            </div>
+            <div class="form-group">
+                {{ form.duracao.label_tag }}
+                {{ form.duracao }}
+                <small>{{ form.duracao.help_text }}</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form.diretor.label_tag }}
+            {{ form.diretor }}
+            <a href="{% url 'catalog:criar_diretor_popup' %}" class="add-another" id="add_id_diretor" onclick="return showAddAnotherPopup(this);">
+                (+)
+            </a>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.atores.id_for_label }}">Atores</label>
+            {{ form.atores }}
+             <a href="{% url 'catalog:criar_ator_popup' %}" class="add-another" id="add_id_atores" onclick="return showAddAnotherPopup(this);">
+                (+)
+            </a>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox-group">
+                <h4>Gêneros</h4>
+                {{ form.generos }}
+            </div>
+        </div>
+
+        <div class="form-actions">
             <button type="submit">Salvar Item</button>
-        </form>
-        <p><a href="{% url 'home' %}">Cancelar e voltar para a Home</a></p>
-    </div>
-</body>
-</html>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function showAddAnotherPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_id_/, '');
+        // Adiciona um parâmetro '_popup' na URL para que a view saiba que é um pop-up
+        var href = triggeringLink.href + (triggeringLink.href.indexOf('?') == -1 ? '?' : '&') + '_popup=1';
+        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }
+
+    function dismissAddRelatedObjectPopup(win, newId, newRepr) {
+        var name = win.name;
+        var elem = document.getElementById('id_'s + name);
+        if (elem) {
+            // Lógica para campos <select> (como Diretor)
+            if (elem.nodeName == 'SELECT') {
+                var o = new Option(newRepr, newId);
+                elem.options[elem.options.length] = o;
+                o.selected = true;
+            }
+            // A lógica para atualizar widgets de múltiplos checkboxes ou selects é mais complexa
+            // e geralmente requer recarregar a página ou usar AJAX.
+            // Por enquanto, o pop-up funciona melhor com campos de seleção única.
+        } else {
+            // Se o elemento não foi encontrado, recarregue a página principal para ver a nova opção.
+            // É uma solução mais simples que funciona para todos os tipos de campo.
+            location.reload(true);
+        }
+        win.close();
+    }
+</script>
+
+{% endblock %}
