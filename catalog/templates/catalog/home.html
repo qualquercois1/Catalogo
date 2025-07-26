@@ -1,19 +1,130 @@
 {% extends 'catalog/base.html' %}
 
-{% block title %}Página Inicial - Meu Catálogo{% endblock %}
+{% block title %}Bem-vindo ao Meu Catálogo{% endblock %}
 
 {% block content %}
-    <h1>🎬 Bem-vindo ao seu Catálogo Pessoal!</h1>
-    <p>Este é o seu espaço para organizar e avaliar os filmes e séries que você já assistiu.</p>
-    <hr>
 
-    {% if not user.is_authenticated %}
-        <p>Crie uma conta ou faça login para começar a construir sua coleção!</p>
-    {% else %}
-        <p>Use o menu de navegação acima para gerenciar seus itens.</p>
-    {% endif %}
+<style>
+    .content-wrapper {
+        padding: 0;
+    }
 
-    <div style="margin-top: 40px; font-size: 0.9em; color: #777;">
-        <p>Atualmente temos <strong>{{ total_itens }}</strong> item(ns) em nosso catálogo geral.</p>
-    </div>
+    .hero-section {
+        background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1574267432553-4b4628081c31?fit=crop&w=1400&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5em;
+        margin-bottom: 0.3em;
+        font-weight: 700;
+    }
+
+    .hero-section p {
+        font-size: 1.4em;
+        max-width: 600px;
+        margin: 0 auto 30px auto;
+        font-weight: 300;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background-color: #3498db;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        font-size: 1.2em;
+        border-radius: 5px;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .cta-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+    }
+
+    .features-section {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+        text-align: center;
+    }
+
+    .features-section h2 {
+        font-size: 2.5em;
+        margin-bottom: 50px;
+        color: #333;
+    }
+
+    .features-grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .feature-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        padding: 30px;
+        width: 300px;
+        transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .feature-card .icon {
+        font-size: 3em;
+        color: #3498db;
+    }
+
+    .feature-card h3 {
+        font-size: 1.5em;
+        margin: 20px 0 10px 0;
+    }
+
+</style>
+
+<div class="content-wrapper">
+
+    <section class="hero-section">
+        <h1>Seu Universo de Filmes em um Só Lugar</h1>
+        <p>Organize, avalie e redescubra os filmes e séries que marcaram sua vida. Simples e pessoal.</p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'catalog:listar_meus_filmes' %}" class="cta-button">Ver Meus Itens</a>
+        {% else %}
+            <a href="{% url 'catalog:register' %}" class="cta-button">Crie sua Conta Grátis</a>
+        {% endif %}
+    </section>
+
+    <section class="features-section">
+        <h2>Como Funciona</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">🎬</div>
+                <h3>Organize sua Coleção</h3>
+                <p>Adicione facilmente os filmes e séries que você assistiu. Mantenha um registro completo com sinopse, elenco e muito mais.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⭐</div>
+                <h3>Avalie e Relembre</h3>
+                <p>Dê uma nota pessoal para cada item e adicione comentários. Nunca mais esqueça o que você achou de um filme!</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h3>Descubra o que Falta</h3>
+                <p>Com a nossa lista de sugestões, você pode ver facilmente quais clássicos e novidades do nosso catálogo você ainda não assistiu.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
 {% endblock %}

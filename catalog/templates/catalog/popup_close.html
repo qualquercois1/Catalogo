@@ -5,10 +5,7 @@
 </head>
 <body>
     <script type="text/javascript">
-        // Pega a referência da janela que abriu este pop-up
         var opener = window.opener;
-        // Chama a função 'dismissAddRelatedObjectPopup' na janela principal,
-        // passando o novo ID e o novo nome que foram criados.
         opener.dismissAddRelatedObjectPopup(window, '{{ instance_pk }}', '{{ instance_name|escapejs }}');
     </script>
 </body>

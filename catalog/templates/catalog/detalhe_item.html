@@ -1,47 +1,152 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ item.nome }}</title>
-    <style>
-        body { font-family: sans-serif; padding: 2em; }
-        .container { max-width: 700px; margin: auto; }
-        .avaliacao-form { margin-top: 2em; padding: 1em; border: 1px solid #ccc; border-radius: 5px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>{{ item.nome }} ({{ item.ano_lancamento }})</h1>
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ item.nome }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .detail-container {
+        max-width: 900px;
+        margin: auto;
+        padding: 2.5em;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .item-header h1 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .item-header .subtitle {
+        font-size: 1.1em;
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+
+    .metadata-section {
+        margin-top: 2em;
+        padding-bottom: 1.5em;
+        border-bottom: 1px solid #ecf0f1;
+    }
+
+    .metadata-section p {
+        margin: 0.5em 0;
+        color: #34495e;
+    }
+
+    .synopsis-section {
+        margin-top: 1.5em;
+    }
+
+    .synopsis-section h3 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.3em;
+        display: inline-block;
+    }
+
+    .synopsis-section p {
+        line-height: 1.7;
+        color: #34495e;
+    }
+
+    .rating-section {
+        margin-top: 2.5em;
+        padding: 1.5em;
+        background-color: #f9f9f9;
+        border: 1px solid #ecf0f1;
+        border-radius: 8px;
+    }
+
+    .rating-section h3 {
+        margin-top: 0;
+        color: #2c3e50;
+    }
+    
+    .current-rating {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #3498db;
+    }
+    
+    .no-rating {
+        font-style: italic;
+        color: #7f8c8d;
+    }
+
+    .rating-form select {
+        padding: 8px;
+        margin-right: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .rating-form button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="detail-container">
+    <div class="item-header">
+        <h1>{{ item.nome }}</h1>
+        <div class="subtitle">
+            <span>{{ item.ano_lancamento }}</span> &bull; <span>{{ item.duracao }} min</span>
+        </div>
+    </div>
+
+    <div class="metadata-section">
         <p><strong>Diretor:</strong> {{ item.diretor.nome }}</p>
-        <p><strong>Sinopse:</strong> {{ item.sinopse|linebreaks }}</p>
-        <p><strong>Gêneros:</strong> 
+        <p>
+            <strong>Gêneros:</strong>
             {% for genero in item.generos.all %}
                 {{ genero.nome }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Nenhum gênero cadastrado.
             {% endfor %}
         </p>
-        <hr>
-
-        <div class="avaliacao-form">
-            <h3>Sua Avaliação</h3>
-            {% if avaliacao_existente %}
-                <p>Sua nota atual para este item é: <strong>{{ avaliacao_existente.nota }}</strong></p>
-            {% else %}
-                <p>Você ainda não avaliou este item.</p>
-            {% endif %}
-
-            <form method="post">
-                {% csrf_token %}
-                <label for="nota">Dar ou alterar nota:</label>
-                <select name="nota" id="nota">
-                    {% for i in range_notas %}
-                        <option value="{{ i }}" {% if avaliacao_existente and avaliacao_existente.nota == i %}selected{% endif %}>{{ i }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Salvar Avaliação</button>
-            </form>
-        </div>
-        
-        <p style="margin-top: 2em;"><a href="{% url 'home' %}">Voltar para a Home</a></p>
+        <p>
+            <strong>Atores Principais:</strong>
+            {% for ator in item.atores.all %}
+                {{ ator.nome }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Nenhum ator cadastrado.
+            {% endfor %}
+        </p>
     </div>
-</body>
-</html>
+
+    <div class="synopsis-section">
+        <h3>Sinopse</h3>
+        <p>{{ item.sinopse|linebreaksbr }}</p>
+    </div>
+
+    <div class="rating-section">
+        <h3>Sua Avaliação</h3>
+        <p>
+            {% if avaliacao_existente %}
+                Sua nota atual: <span class="current-rating">{{ avaliacao_existente.nota }} / 10</span>
+            {% else %}
+                <span class="no-rating">Você ainda não avaliou este item.</span>
+            {% endif %}
+        </p>
+        
+        <form method="post" class="rating-form">
+            {% csrf_token %}
+            <label for="nota">Dar ou alterar nota:</label>
+            <select name="nota" id="nota">
+                {% for i in range_notas %}
+                    <option value="{{ i }}" {% if avaliacao_existente and avaliacao_existente.nota == i %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Salvar Avaliação</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -48,16 +48,12 @@
     .form-row .form-group {
         width: 100%;
     }
-
-    /* 👇👇 ESTE BLOCO DE CÓDIGO FOI REVISADO 👇👇 */
     .checkbox-group {
         border: 1px solid #ccc;
         border-radius: 4px;
         padding: 1em;
         background-color: white;
-
-        /* 1. Aplicamos a altura máxima e a rolagem na caixa principal */
-        max-height: 150px; /* Você pode ajustar este valor */
+        max-height: 150px;
         overflow-y: auto;
     }
     .checkbox-group h4 {
@@ -69,7 +65,6 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
-        /* 2. O Flexbox agora organiza os itens dentro da caixa com altura definida */
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
@@ -77,8 +72,6 @@
     .checkbox-group li {
         white-space: nowrap;
     }
-
-    /* O resto dos estilos continuam iguais */
     .form-actions {
         text-align: center;
         margin-top: 2em;
@@ -167,8 +160,7 @@
 <script type="text/javascript">
     function showAddAnotherPopup(triggeringLink) {
         var name = triggeringLink.id.replace(/^add_id_/, '');
-        // Adiciona um parâmetro '_popup' na URL para que a view saiba que é um pop-up
-        var href = triggeringLink.href + (triggeringLink.href.indexOf('?') == -1 ? '?' : '&') + '_popup=1';
+        var href = triggeringLink.href;
         var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
         win.focus();
         return false;
@@ -176,20 +168,14 @@
 
     function dismissAddRelatedObjectPopup(win, newId, newRepr) {
         var name = win.name;
-        var elem = document.getElementById('id_'s + name);
+        var elem = document.getElementById('id_' + name);
         if (elem) {
-            // Lógica para campos <select> (como Diretor)
             if (elem.nodeName == 'SELECT') {
                 var o = new Option(newRepr, newId);
                 elem.options[elem.options.length] = o;
                 o.selected = true;
             }
-            // A lógica para atualizar widgets de múltiplos checkboxes ou selects é mais complexa
-            // e geralmente requer recarregar a página ou usar AJAX.
-            // Por enquanto, o pop-up funciona melhor com campos de seleção única.
         } else {
-            // Se o elemento não foi encontrado, recarregue a página principal para ver a nova opção.
-            // É uma solução mais simples que funciona para todos os tipos de campo.
             location.reload(true);
         }
         win.close();

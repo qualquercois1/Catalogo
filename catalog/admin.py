@@ -2,11 +2,8 @@ from django.contrib import admin
 from .models import Genero, Ator, Diretor, Item, Avaliacao
 
 class ItemAdmin(admin.ModelAdmin):
-    # Campos que aparecerão na listagem de itens
     list_display = ('nome', 'ano_lancamento', 'diretor', 'assistido')
-    # Adiciona uma barra de busca
     search_fields = ('nome', 'diretor__nome')
-    # Adiciona filtros na lateral
     list_filter = ('assistido', 'generos', 'ano_lancamento')
 
 class AvaliacaoAdmin(admin.ModelAdmin):
